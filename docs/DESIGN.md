@@ -1,7 +1,9 @@
-# ByteVM - Technical Design Document
+# ByteVM
 
 **Version:** 0.3 (Draft - supersedes 0.2)
+
 **Language:** C17
+
 **Status:** v1.0. All ten phases in §15 are implemented against this
 spec - the full ISA, the `.bvm` loader, a two-pass assembler, a
 byte-identical-round-trip disassembler, an interactive debugger, golden
