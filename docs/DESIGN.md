@@ -4,7 +4,8 @@
 
 **Language:** C17
 
-**Status:** v1.0. All ten phases in §15 are implemented against this
+
+**Status:** v1.0. All ten are implemented against this
 spec - the full ISA, the `.bvm` loader, a two-pass assembler, a
 byte-identical-round-trip disassembler, an interactive debugger, golden
 regression tests, a fuzz harness, and CI all exist and pass. CLI:
