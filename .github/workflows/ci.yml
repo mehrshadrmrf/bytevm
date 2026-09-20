@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  make:
+    name: make (gcc + clang)
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        cc: [gcc, clang]
+    steps:
+      - uses: actions/checkout@v4
+      - name: make build
+        run: make build
+        env:
+          CC: ${{ matrix.cc }}
+      - name: make test
+        run: make test
+        env:
+          CC: ${{ matrix.cc }}
+      - name: run every example through the CLI
+        run: |
+          for f in examples/*.asm; do
+            echo "--- $f ---"
+            ./build/bytevm run "$f"
+          done
+
+  cmake:
+    name: cmake
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: configure
+        run: cmake -S . -B build-cmake -DCMAKE_BUILD_TYPE=Debug
+      - name: build
+        run: cmake --build build-cmake
+      - name: test
+        run: ctest --test-dir build-cmake --output-on-failure
+
+  format:
+    name: clang-format check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: install clang-format
+        run: sudo apt-get update && sudo apt-get install -y clang-format
+      - name: check formatting
+        run: |
+          make format
+          git diff --exit-code -- . ':!build' ':!build-cmake' || \
+            (echo "::error::files are not clang-format clean; run 'make format'" && exit 1)
